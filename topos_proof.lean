@@ -66,3 +66,40 @@ example (iso : Ω ≅ ⊥_ C) :
   (degenerate_of_classifier_zero Ω truth iso).hom_inv_id
 
 end Tests
+
+section Infinitesimals
+-- Deep Analysis: Infinitesimal Values in a Degenerate Topos
+-- In Synthetic Differential Geometry (SDG), infinitesimals are represented
+-- by an object D (where d² = 0).
+
+variable (D : C)
+
+/-- 
+  Proof 5: If the topos is degenerate (Ω ≅ 0), the infinitesimal space D 
+  collapses structurally. The only map from D to the terminal object 
+  factors perfectly through the initial object (0).
+-/
+def collapse_of_infinitesimals (iso : Ω ≅ ⊥_ C) : D ⟶ ⊥_ C :=
+  terminal.from D ≫ (degenerate_of_classifier_zero Ω truth iso).hom
+
+/-- 
+  Proof 6 (Deep Analysis): Any two points of the infinitesimal space are equal.
+  A "point" is a morphism from the terminal object (1) to D.
+  If Ω ≅ 0, there are no distinct infinitesimal values. The space is completely empty/degenerate.
+-/
+theorem infinitesimal_points_trivial (iso : Ω ≅ ⊥_ C) (p1 p2 : ⊤_ C ⟶ D) : p1 = p2 := by
+  have deg := degenerate_of_classifier_zero Ω truth iso
+  -- Since they map out of the initial object, they are unique:
+  have h : deg.inv ≫ p1 = deg.inv ≫ p2 := Subsingleton.elim _ _
+  -- Rewriting using associativity and the identity equivalence:
+  rw [← Category.id_comp p1, ← Category.id_comp p2, ← deg.hom_inv_id]
+  rw [Category.assoc, Category.assoc, h]
+
+/--
+  Deep Analysis Conclusion:
+  Infinitesimals rely on the rich internal intuitionistic logic of the Topos 
+  (where ¬¬(d = 0) does not strictly imply d = 0).
+  If the truth classifier Ω ≅ 0, logic collapses (True = False), and the infinitesimals 
+  lose their geometric meaning, becoming indistinguishable from nothingness (0).
+-/
+end Infinitesimals
